@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Two Marker Interaction</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs>
+      <a-marker id="markerA" preset="hiro">
+        <a-box id="boxA" color="blue" position="0 0.5 0"></a-box>
+      </a-marker>
+
+      <a-marker id="markerB" type="pattern" url="assets/pattern-download.patt">
+        <a-sphere id="sphereB" color="red" position="0 0.5 0"></a-sphere>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const markerA = document.querySelector('#markerA');
+    const markerB = document.querySelector('#markerB');
+    const boxA = document.querySelector('#boxA');
+
+    let isAVisible = false;
+    let isBVisible = false;
+    const threshold = 1.5; // Distance threshold in meters (adjust as needed)
+
+    markerA.addEventListener('markerFound', () => { isAVisible = true; });
+    markerA.addEventListener('markerLost', () => {
+      isAVisible = false;
+      boxA.setAttribute('color', 'blue'); // reset color if lost
+    });
+
+    markerB.addEventListener('markerFound', () => { isBVisible = true; });
+    markerB.addEventListener('markerLost', () => {
+      isBVisible = false;
+      boxA.setAttribute('color', 'blue'); // reset color if lost
+    });
+
+    // Use A-Frame’s render loop to constantly check distance
+    AFRAME.registerComponent('distance-checker', {
+      tick: function () {
+        if (isAVisible && isBVisible) {
+          const posA = markerA.object3D.position;
+          const posB = markerB.object3D.position;
+          const distance = posA.distanceTo(posB);
+
+          if (distance < threshold) {
+            boxA.setAttribute('color', 'green');  // close enough → green
+          } else {
+            boxA.setAttribute('color', 'blue');   // far → blue
+          }
+        }
+      }
+    });
+
+    // Attach the component to the scene to start ticking
+    document.querySelector('a-scene').setAttribute('distance-checker', '');
+  });
+</script>
+  </body>
+</html>
