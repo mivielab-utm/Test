@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+ <html>
+    <head>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>    
+    <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+    <!the folllowing script is needed to animate gltf files>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
+      
+  </head>
+
+  <body>
+    <a-scene
+      vr-mode-ui="enabled: false"
+      arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;">
+    <a-gltf-model src="https://cdn.glitch.global/efc295ee-a4d8-474c-8b0c-8360de80bd33/phoenix_bird.glb?v=1673638529468" 
+                  animation-mixer="clip: Take 001" 
+                  position="100 -100 -1000" 
+                  ></a-gltf-model>
+    <a-camera  rotation-reader> </a-camera>
+    </a-scene>
+  </body>
+</html>
